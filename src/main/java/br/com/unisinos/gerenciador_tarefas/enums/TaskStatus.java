@@ -1,6 +1,9 @@
 package br.com.unisinos.gerenciador_tarefas.enums;
 
 public enum TaskStatus {
-    USER,
-    ADMIN
+    BACKLOG,
+    TODO,
+    IN_PROGRESS,
+    REVIEW,
+    DONE
 }

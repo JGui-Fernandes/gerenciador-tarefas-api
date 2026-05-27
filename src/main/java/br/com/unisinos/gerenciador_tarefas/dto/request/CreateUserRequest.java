@@ -1,12 +1,12 @@
 package br.com.unisinos.gerenciador_tarefas.dto.request;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public record CreateUserRequest(
         String name,
         String email,
         String password,
-        Date birthDate,
+        LocalDate birthDate,
         String phone
 ) {
 }

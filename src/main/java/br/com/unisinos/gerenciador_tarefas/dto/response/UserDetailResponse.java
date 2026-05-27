@@ -1,13 +1,13 @@
 package br.com.unisinos.gerenciador_tarefas.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public record UserDetailResponse(
         Long id,
         String name,
         String email,
-        Date birthDate,
+        LocalDate birthDate,
         String phone,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
