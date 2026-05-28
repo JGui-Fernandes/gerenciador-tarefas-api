@@ -2,6 +2,9 @@ package br.com.unisinos.gerenciador_tarefas.controller;
 
 import br.com.unisinos.gerenciador_tarefas.constants.Endpoints;
 import br.com.unisinos.gerenciador_tarefas.constants.JsonPath;
+import br.com.unisinos.gerenciador_tarefas.dto.response.ErrorMessageResponse;
+import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
+import br.com.unisinos.gerenciador_tarefas.mocks.ErrorMock;
 import br.com.unisinos.gerenciador_tarefas.mocks.TaskMock;
 import br.com.unisinos.gerenciador_tarefas.service.TaskService;
 import org.junit.jupiter.api.Test;
@@ -37,10 +40,32 @@ class TaskControllerTest {
 
         mockMvc.perform(get(Endpoints.TASKS + "/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath(JsonPath.ID).isNotEmpty())
+                .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).isNotEmpty())
                 .andExpect(jsonPath(JsonPath.TASK_STATUS).isNotEmpty())
+                .andExpect(jsonPath(JsonPath.TASK_CREATOR).isNotEmpty())
                 .andExpect(jsonPath(JsonPath.CREATEDAT).isNotEmpty())
                 .andExpect(jsonPath(JsonPath.UPDATEDAT).isNotEmpty());
+    }
+
+    @Test
+    void shouldReturnTaskNotFound() throws Exception {
+
+        ErrorMessageResponse error =
+                ErrorMock.notFound();
+
+        when(service.findById(1L))
+                .thenThrow(
+                        new TaskNotFoundException(
+                                error.message()
+                        )
+                );
+
+        mockMvc.perform(get(Endpoints.TASKS + "/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE)
+                        .value(error.statusCode()))
+                .andExpect(jsonPath(JsonPath.ERROR_MESSAGE)
+                        .value(error.message()));
     }
 }

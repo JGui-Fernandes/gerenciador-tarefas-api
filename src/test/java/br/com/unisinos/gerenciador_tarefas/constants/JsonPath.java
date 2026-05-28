@@ -9,7 +9,6 @@ public class JsonPath {
     public static final String CREATEDAT = "$.createdAt";
     public static final String UPDATEDAT = "$.updatedAt";
 
-
     public static final String TASK_DESCRIPTION = "$.description";
     public static final String TASKD_EADLINE = "$.deadline";
     public static final String TASK_STATUS = "$.status";
@@ -17,5 +16,6 @@ public class JsonPath {
     public static final String TASK_ASSIGNE = "$.assigne";
     public static final String TASK_PARTICIPANTS = "$.participants";
 
-
+    public static final String ERROR_STATUS_CODE = "$.statusCode";
+    public static final String ERROR_MESSAGE = "$.message";
 }
