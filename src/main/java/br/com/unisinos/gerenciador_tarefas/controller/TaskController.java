@@ -22,12 +22,12 @@ public class TaskController {
     private final TaskService service;
 
     @PostMapping
-    public ResponseEntity<TaskDetailResponse> create(
+    public ResponseEntity<Void> create(
             @RequestBody @Valid CreateTaskRequest request
     ) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.create(request));
+                .build();
     }
 
     @GetMapping("/{id}")
@@ -60,4 +60,5 @@ public class TaskController {
 
         return ResponseEntity.noContent().build();
     }
+
 }
