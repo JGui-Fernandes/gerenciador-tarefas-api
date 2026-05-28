@@ -1,4 +1,4 @@
-package br.com.unisinos.gerenciador_tarefas.mocks;
+package br.com.unisinos.gerenciador_tarefas.mocks.response;
 
 import br.com.unisinos.gerenciador_tarefas.dto.response.ListUserResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.TaskDetailResponse;
