@@ -10,10 +10,10 @@ public class JsonPath {
     public static final String UPDATEDAT = "$.updatedAt";
 
     public static final String TASK_DESCRIPTION = "$.description";
-    public static final String TASKD_EADLINE = "$.deadline";
+    public static final String TASK_DEADLINE = "$.deadline";
     public static final String TASK_STATUS = "$.status";
     public static final String TASK_CREATOR = "$.creator";
-    public static final String TASK_ASSIGNE = "$.assigne";
+    public static final String TASK_ASSIGNEE = "$.assignee";
     public static final String TASK_PARTICIPANTS = "$.participants";
 
     public static final String ERROR_STATUS_CODE = "$.statusCode";

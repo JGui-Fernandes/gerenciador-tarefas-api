@@ -5,6 +5,14 @@ import br.com.unisinos.gerenciador_tarefas.dto.response.ErrorMessageResponse;
 
 public class ErrorMock {
 
+    public static ErrorMessageResponse fillAllMandatoryFields(){
+
+        return new ErrorMessageResponse(
+                400,
+                ErrorMessages.FILL_ALL_FIELDS
+        );
+    }
+
     public static ErrorMessageResponse userUnauthorized() {
 
         return new ErrorMessageResponse(
