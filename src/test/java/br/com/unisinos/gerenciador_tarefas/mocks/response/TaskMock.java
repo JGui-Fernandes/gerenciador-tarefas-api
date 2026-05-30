@@ -1,5 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.response;
 
+import br.com.unisinos.gerenciador_tarefas.dto.response.ListTaskResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.ListUserResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.TaskDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
@@ -30,6 +31,15 @@ public class TaskMock {
                 List.of(creator),
                 LocalDateTime.now(),
                 LocalDateTime.now()
+        );
+    }
+
+    public static ListTaskResponse listTaskResponse() {
+
+        return new ListTaskResponse(
+                1L,
+                "Criar documentação da API",
+                TaskStatus.IN_PROGRESS
         );
     }
 }

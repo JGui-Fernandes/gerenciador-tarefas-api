@@ -15,13 +15,45 @@ public class TaskBody {
         participantsIdList.add(3L);
 
         return new CreateTaskRequest(
-                "Teste",
-                "Description",
+                "Criar documentação da API",
+                "Documentar endpoints",
                 LocalDate.now(),
                 TaskStatus.IN_PROGRESS,
                 1L,
                 2L,
                 participantsIdList
+        );
+    }
+
+    public static CreateTaskRequest createTaskMandatoryBody(){
+        List<Long> participantsIdList = new ArrayList<>();
+        participantsIdList.add(1L);
+        participantsIdList.add(3L);
+
+        return new CreateTaskRequest(
+                "Teste",
+                null,
+                null,
+                null,
+                1L,
+                null,
+                null
+        );
+    }
+
+    public static CreateTaskRequest createEmpryBody(){
+        List<Long> participantsIdList = new ArrayList<>();
+        participantsIdList.add(1L);
+        participantsIdList.add(3L);
+
+        return new CreateTaskRequest(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
         );
     }
 }

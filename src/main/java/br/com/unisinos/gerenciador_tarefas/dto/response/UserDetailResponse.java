@@ -1,5 +1,7 @@
 package br.com.unisinos.gerenciador_tarefas.dto.response;
 
+import br.com.unisinos.gerenciador_tarefas.entities.User;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,4 +15,7 @@ public record UserDetailResponse(
         LocalDateTime updatedAt
 
 ) {
+    public UserDetailResponse(User u) {
+        this(u.getId(), u.getName(), u.getEmail(), u.getBirthDate(), u.getPhone(), u.getCreatedAt(), u.getCreatedAt());
+    }
 }
