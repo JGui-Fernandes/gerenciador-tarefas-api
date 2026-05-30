@@ -1,5 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.dto.response;
 
+import br.com.unisinos.gerenciador_tarefas.entities.Task;
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
 
 import java.time.LocalDate;
@@ -18,4 +19,9 @@ public record TaskDetailResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
+    public TaskDetailResponse(Task task){
+        this(task.getId(), task.getName(), task.getDescription(), task.getDeadline(), task.getStatus(),
+                new ListUserResponse(task.getCreator()), new ListUserResponse(task.getAssignee()),
+                task.getParticipants().stream().map(ListUserResponse::new).toList(), task.getCreatedAt(), task.getUpdatedAt());
+    }
 }

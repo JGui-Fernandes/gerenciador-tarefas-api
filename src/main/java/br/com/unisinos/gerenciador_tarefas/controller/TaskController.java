@@ -1,6 +1,7 @@
 package br.com.unisinos.gerenciador_tarefas.controller;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.CreateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.UpdateTaskRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.ListTaskResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.TaskDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.service.TaskService;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskController {
 
-    private final TaskService service;
+    @Autowired
+    private TaskService service;
 
     @PostMapping
     public ResponseEntity<Void> create(
             @RequestBody @Valid CreateTaskRequest request
     ) {
+        service.create(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
@@ -47,7 +51,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<TaskDetailResponse> update(
             @PathVariable Long id,
-            @RequestBody @Valid CreateTaskRequest request
+            @RequestBody @Valid UpdateTaskRequest request
     ) {
         return ResponseEntity.ok(service.update(id, request));
     }

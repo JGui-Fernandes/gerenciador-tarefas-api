@@ -2,18 +2,38 @@ package br.com.unisinos.gerenciador_tarefas.service;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.CreateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.UserDetailResponse;
+import br.com.unisinos.gerenciador_tarefas.entities.User;
+import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
+import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface UserService {
+@Service
+public class UserService {
 
-    UserDetailResponse create(CreateUserRequest request);
+    @Autowired
+    private UserRepository userRepository;
 
-    UserDetailResponse findById(Long id);
+    public UserDetailResponse create(CreateUserRequest request){
+        return null;
+    }
 
-    UserDetailResponse update(
-            Long id,
-            CreateUserRequest request
-    );
+    public UserDetailResponse findById(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new TaskNotFoundException()
+                );
+        return new UserDetailResponse(user);
 
-    void delete(Long id);
+    }
+
+    public UserDetailResponse update(Long id, CreateUserRequest request){
+        return null;
+
+    }
+
+    public void delete(Long id){
+
+    }
 
 }

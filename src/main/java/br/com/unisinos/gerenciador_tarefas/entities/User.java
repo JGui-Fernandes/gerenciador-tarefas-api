@@ -1,8 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.entities;
 
-import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
-import br.com.unisinos.gerenciador_tarefas.entities.User;
-
+import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,16 +19,18 @@ import java.util.List;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tasks")
+@Table(name = "users")
 @Entity
-public class Task {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String description;
-    private LocalDate deadline;
+    private String email;
+    private String password;
+    private LocalDate birthDate;
+    private String phone;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -41,22 +40,17 @@ public class Task {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.ORDINAL)
-    private TaskStatus status = TaskStatus.BACKLOG;
+    private UserRole role = UserRole.USER;
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private User creator;
+    private boolean isActive;
 
-    @ManyToOne
-    @JoinColumn(name = "assignee_id")
-    private User assignee;
+    @OneToMany(mappedBy = "creator")
+    private List<Task> createdTasks;
 
-    @ManyToMany
-    @JoinTable(
-            name = "task_participants",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> participants = new ArrayList<>();
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> assignedTasks;
+
+    @ManyToMany(mappedBy = "participants")
+    private List<Task> participatingTasks;
+
 }

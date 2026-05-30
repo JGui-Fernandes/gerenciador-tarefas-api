@@ -1,4 +1,4 @@
-package br.com.unisinos.gerenciador_tarefas.controller;
+package br.com.unisinos.gerenciador_tarefas.scenarios;
 
 import br.com.unisinos.gerenciador_tarefas.constants.Endpoints;
 import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
@@ -12,10 +12,13 @@ import br.com.unisinos.gerenciador_tarefas.mocks.response.ErrorMock;
 import br.com.unisinos.gerenciador_tarefas.mocks.response.TaskMock;
 import br.com.unisinos.gerenciador_tarefas.service.TaskService;
 import br.com.unisinos.gerenciador_tarefas.util.JsonUtils;
+import br.com.unisinos.gerenciador_tarefas.util.LoginTestService;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,14 +36,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TaskController.class)
-class TaskControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+class TaskTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
     private TaskService service;
+
+    @Autowired
+    private LoginTestService login;
 
     @Test
     void shouldCreateTaskWithAllAttributesSuccessfully() throws Exception {
@@ -54,6 +61,7 @@ class TaskControllerTest {
                 );
 
         mockMvc.perform(post(Endpoints.TASKS)
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
                 .andExpect(status().isCreated())
