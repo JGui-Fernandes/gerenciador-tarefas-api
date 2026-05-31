@@ -73,10 +73,14 @@ public class TaskService {
 
     public List<ListTaskResponse> findAllAssignedTo(Long assignedTo) {
 
-        return taskRepository.findByAssigneeId(assignedTo)
-                .stream()
-                .map(ListTaskResponse::new)
-                .toList();
+        User u = userRepository.findById(assignedTo)
+                .orElseThrow(()->
+                        new UserNotFoundException()
+                );
+        return u.getAssignedTasks()
+                    .stream()
+                    .map(ListTaskResponse::new)
+                    .toList();
     }
 
     public TaskDetailResponse update(Long id, UpdateTaskRequest request){
@@ -110,6 +114,11 @@ public class TaskService {
     }
 
     public void delete(Long id){
+        Task task = taskRepository.findById(id)
+                .orElseThrow(()->
+                    new TaskNotFoundException()
+                );
 
+        taskRepository.delete(task);
     }
 }
