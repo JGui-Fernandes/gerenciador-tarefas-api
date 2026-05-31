@@ -7,12 +7,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record CreateTaskRequest(
-        @NotNull
+        @NotNull(message = "O campo name é um campo obrigatório")
         String name,
         String description,
         LocalDate deadline,
         TaskStatus status,
-        @NotNull
+        @NotNull (message = "O campo creatorId é obrigatório")
         Long creatorId,
         Long assigneeId,
         List<Long> participantsId
