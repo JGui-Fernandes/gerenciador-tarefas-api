@@ -1,6 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.dto.response;
 
-public record TokenResponse(
+public record LoginResponse(
         String token,
         ListUserResponse user
 ) {

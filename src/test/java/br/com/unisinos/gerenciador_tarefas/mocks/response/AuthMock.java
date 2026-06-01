@@ -1,12 +1,12 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.response;
 
-import br.com.unisinos.gerenciador_tarefas.dto.response.TokenResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.LoginResponse;
 
 public class AuthMock {
 
-    public static TokenResponse tokenResponse() {
+    public static LoginResponse tokenResponse() {
 
-        return new TokenResponse(
+        return new LoginResponse(
                 "jwt-token-fake",
                 UserMock.listUserResponse()
         );
