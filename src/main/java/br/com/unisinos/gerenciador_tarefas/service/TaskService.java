@@ -1,12 +1,11 @@
 package br.com.unisinos.gerenciador_tarefas.service;
 
-import br.com.unisinos.gerenciador_tarefas.dto.request.CreateTaskRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.request.UpdateTaskRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ListTaskResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.TaskDetailResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.request.task.CreateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.task.UpdateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.task.ListTaskResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.task.TaskDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.entities.Task;
 import br.com.unisinos.gerenciador_tarefas.entities.User;
-import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
 import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.repository.TaskRepository;
@@ -24,42 +23,36 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public void create(CreateTaskRequest request){
+    public void create(CreateTaskRequest request) {
         Task task = new Task();
-        if(request.description() != null){
-            task.setDescription(request.description());
+        task.setName(request.name());
+        task.setDescription(request.description());
+        task.setDeadline(request.deadline());
+
+        task.setStatus(request.status());
+
+        if (request.assigneeId() != null) {
+            User assignee = userRepository.findByIdAndIsActiveTrue(request.assigneeId())
+                    .orElseThrow(UserNotFoundException::new);
+            task.setAssignee(assignee);
         }
-        if(request.status() != null){
-            task.setStatus(request.status());
-        } else{
-            task.setStatus(TaskStatus.BACKLOG);
-        }
-        if(request.assigneeId() != null){
-           User assignee = userRepository.findById(request.assigneeId())
-                   .orElseThrow(() ->
-                        new UserNotFoundException()
-                   );
-           task.setAssignee(assignee);
-        }
-        if(request.deadline() != null){
-            task.setDeadline(request.deadline());
-        }
-        if(request.participantsId() != null && !request.participantsId().isEmpty()){
-            User user;
-            for(Long id : request.participantsId()){
-                user = userRepository.findById(id)
-                    .orElseThrow(() ->
-                            new UserNotFoundException()
-                    );
+
+        if (request.participantsId() != null && !request.participantsId().isEmpty()) {
+            List<User> users = userRepository.findByIdInAndIsActiveTrue(request.participantsId());
+
+            if (users.size() != request.participantsId().size()) {
+                throw new UserNotFoundException();
+            }
+
+            for (User user : users) {
+                if (task.getParticipants().contains(user)) {
+                    continue;
+                }
                 task.getParticipants().add(user);
             }
         }
-
-        task.setName(request.name());
-        task.setCreator(userRepository.getReferenceById(request.creatorId()));
-
-        taskRepository.save(task);
     }
+
 
     public TaskDetailResponse findById(Long id) {
 

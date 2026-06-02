@@ -1,6 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.request;
 
-import br.com.unisinos.gerenciador_tarefas.dto.request.CreateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.task.CreateTaskRequest;
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
 
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.response;
 
-import br.com.unisinos.gerenciador_tarefas.dto.response.ListUserResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.UserDetailResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.UserDetailResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

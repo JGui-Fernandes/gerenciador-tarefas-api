@@ -1,6 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.response;
 
-import br.com.unisinos.gerenciador_tarefas.dto.response.LoginResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.auth.LoginResponse;
 
 public class AuthMock {
 

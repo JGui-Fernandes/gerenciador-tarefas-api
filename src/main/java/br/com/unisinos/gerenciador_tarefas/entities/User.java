@@ -53,4 +53,12 @@ public class User {
     @ManyToMany(mappedBy = "participants")
     private List<Task> participatingTasks;
 
+    public void setRole(UserRole role){
+        if(role != null){
+            this.role = role;
+        }
+        else{
+            this.role = UserRole.USER;
+        }
+    }
 }

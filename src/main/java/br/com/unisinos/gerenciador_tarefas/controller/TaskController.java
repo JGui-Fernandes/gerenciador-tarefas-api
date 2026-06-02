@@ -1,12 +1,11 @@
 package br.com.unisinos.gerenciador_tarefas.controller;
 
-import br.com.unisinos.gerenciador_tarefas.dto.request.CreateTaskRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.request.UpdateTaskRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ErrorMessageResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ListTaskResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.TaskDetailResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ValidationErrorResponse;
-import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
+import br.com.unisinos.gerenciador_tarefas.dto.request.task.CreateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.task.UpdateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.task.ListTaskResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.task.TaskDetailResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.error.ValidationErrorResponse;
 import br.com.unisinos.gerenciador_tarefas.service.TaskService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

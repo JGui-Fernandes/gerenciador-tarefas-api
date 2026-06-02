@@ -59,4 +59,13 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> participants = new ArrayList<>();
+
+    public void setStatus(TaskStatus status){
+        if(status != null){
+            this.status = status;
+        }
+        else {
+            this.status = TaskStatus.BACKLOG;
+        }
+    }
 }
