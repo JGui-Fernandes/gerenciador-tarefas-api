@@ -30,19 +30,20 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorMessageResponse> handleUserNotFound(
-            UserNotFoundException ex
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorMessageResponse>
+    handleInvalidCredentials(
+            InvalidCredentialsException ex
     ) {
 
         ErrorMessageResponse response =
                 new ErrorMessageResponse(
-                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.UNAUTHORIZED.value(),
                         ex.getMessage()
                 );
 
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(response);
     }
 
