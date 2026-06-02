@@ -1,5 +1,6 @@
-package br.com.unisinos.gerenciador_tarefas.dto.request;
+package br.com.unisinos.gerenciador_tarefas.dto.request.user;
 
+import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,6 +15,7 @@ public record CreateUserRequest(
         @NotNull (message = "O campo password é obrigatório")
         String password,
         LocalDate birthDate,
-        String phone
+        String phone,
+        UserRole role
 ) {
 }

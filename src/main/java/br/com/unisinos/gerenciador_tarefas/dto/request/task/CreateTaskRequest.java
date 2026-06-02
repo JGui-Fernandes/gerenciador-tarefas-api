@@ -1,4 +1,4 @@
-package br.com.unisinos.gerenciador_tarefas.dto.request;
+package br.com.unisinos.gerenciador_tarefas.dto.request.task;
 
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
 import jakarta.validation.constraints.NotNull;
