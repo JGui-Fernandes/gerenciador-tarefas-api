@@ -1,4 +1,4 @@
-package br.com.unisinos.gerenciador_tarefas.dto.response;
+package br.com.unisinos.gerenciador_tarefas.dto.response.task;
 
 import br.com.unisinos.gerenciador_tarefas.entities.Task;
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;

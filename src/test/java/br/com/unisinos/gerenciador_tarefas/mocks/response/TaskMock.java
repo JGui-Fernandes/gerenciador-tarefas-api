@@ -1,8 +1,8 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.response;
 
-import br.com.unisinos.gerenciador_tarefas.dto.response.ListTaskResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ListUserResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.TaskDetailResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.task.ListTaskResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.task.TaskDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
 
 import java.time.LocalDate;

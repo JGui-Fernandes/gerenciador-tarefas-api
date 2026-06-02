@@ -1,8 +1,8 @@
 package br.com.unisinos.gerenciador_tarefas.util;
 
 import br.com.unisinos.gerenciador_tarefas.constants.Endpoints;
-import br.com.unisinos.gerenciador_tarefas.dto.request.LoginRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.response.LoginResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.request.auth.LoginRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.auth.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;

@@ -1,8 +1,8 @@
 package br.com.unisinos.gerenciador_tarefas.exception;
 
-import br.com.unisinos.gerenciador_tarefas.dto.response.ErrorMessageResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.FieldErrorResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ValidationErrorResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.error.FieldErrorResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.error.ValidationErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -73,6 +73,22 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .badRequest()
+                .body(response);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorMessageResponse> handleBadRequest(
+            BadRequestException ex
+    ) {
+
+        ErrorMessageResponse response =
+                new ErrorMessageResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        ex.getMessage()
+                );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 }

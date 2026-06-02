@@ -1,7 +1,7 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.response;
 
 import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ErrorMessageResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
 
 public class ErrorMock {
 
