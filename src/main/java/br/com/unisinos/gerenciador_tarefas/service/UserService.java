@@ -9,6 +9,7 @@ import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,10 +30,11 @@ public class UserService {
         user.setName(request.name());
         user.setEmail(request.email());
         user.setBirthDate(request.birthDate());
-        user.setPassword(request.password());
+        user.setPassword(passwordEncoder.encode(request.password()));
         user.setPhone(request.phone()); // TODO criptografar senha
         user.setRole(request.role());
-
+        user.setActive(true);
+  
         userRepository.save(user);
     }
 
@@ -72,7 +74,7 @@ public class UserService {
             u.setBirthDate(request.birthDate());
         }
         if(request.password()!= null && !request.password().isBlank()){
-            u.setPassword(request.password());
+            u.setPassword(passwordEncoder.encode(request.password()));
         }
 
         userRepository.save(u);
