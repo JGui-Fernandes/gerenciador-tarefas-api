@@ -5,6 +5,7 @@ import br.com.unisinos.gerenciador_tarefas.dto.request.auth.LoginRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.auth.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import tools.jackson.databind.ObjectMapper;
@@ -12,6 +13,7 @@ import tools.jackson.databind.ObjectMapper;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Service
 public class LoginTestService {
 
     @Autowired
