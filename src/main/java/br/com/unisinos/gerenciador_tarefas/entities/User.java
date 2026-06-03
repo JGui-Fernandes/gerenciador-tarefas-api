@@ -44,7 +44,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    private UserRole role = UserRole.USER;
+    private UserRole role;
 
     private boolean isActive = true;
 
@@ -85,7 +85,7 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isActive;
-
+    }
     public void setRole(UserRole role){
         if(role != null){
             this.role = role;

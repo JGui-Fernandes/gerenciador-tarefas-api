@@ -16,13 +16,17 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
     public void create(CreateUserRequest request) {
-        if (userRepository.findByEmail(request.email()) != null) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
             throw new BadRequestException("Email já cadastrado");
         }
-        if (userRepository.findByPhone(request.phone()) != null) {
+
+        if (request.phone() != null && userRepository.findByPhone(request.phone()).isPresent()) {
             throw new BadRequestException("Telefone já cadastrado");
         }
 
@@ -31,7 +35,7 @@ public class UserService {
         user.setEmail(request.email());
         user.setBirthDate(request.birthDate());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setPhone(request.phone()); // TODO criptografar senha
+        user.setPhone(request.phone());
         user.setRole(request.role());
         user.setActive(true);
   

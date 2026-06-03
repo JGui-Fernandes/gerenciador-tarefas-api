@@ -1,7 +1,7 @@
 package br.com.unisinos.gerenciador_tarefas.controller;
 
-import br.com.unisinos.gerenciador_tarefas.dto.request.LoginRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.response.TokenResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.request.auth.LoginRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.auth.LoginResponse;
 import br.com.unisinos.gerenciador_tarefas.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
