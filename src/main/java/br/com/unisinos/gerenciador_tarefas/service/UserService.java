@@ -44,8 +44,7 @@ public class UserService {
 
     public UserDetailResponse findById(Long id){
         User user = userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(() ->
-                        new TaskNotFoundException()
+                .orElseThrow(UserNotFoundException::new
                 );
         return new UserDetailResponse(user);
 
@@ -53,17 +52,16 @@ public class UserService {
 
     public UserDetailResponse update(Long id, UpdateUserRequest request){
         User u = userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(()->
-                        new UserNotFoundException()
+                .orElseThrow(UserNotFoundException::new
                 );
         if(request.phone() != null && !request.phone().isBlank()){
-            if (userRepository.findByPhone(request.phone()) != null) {
+            if (userRepository.findByPhone(request.phone()).isPresent()) {
                 throw new BadRequestException("Telefone já cadastrado");
             }
-            u.setEmail(request.email());
+            u.setPhone(request.phone());
         }
         if(request.email() != null && !request.email().isBlank()){
-            if (userRepository.findByEmail(request.email()) != null) {
+            if (userRepository.findByEmail(request.email()).isPresent()) {
                 throw new BadRequestException("Email já cadastrado");
             }
             u.setEmail(request.email());
@@ -88,8 +86,7 @@ public class UserService {
 
     public void delete(Long id){
         User u = userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(()->
-                        new UserNotFoundException()
+                .orElseThrow(UserNotFoundException::new
                     );
 
         u.setActive(false);

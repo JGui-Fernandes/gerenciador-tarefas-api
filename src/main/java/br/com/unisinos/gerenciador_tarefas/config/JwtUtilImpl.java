@@ -28,7 +28,7 @@ public class JwtUtilImpl implements JwtUtil {
         byte[] secretBytes = secret.getBytes(StandardCharsets.UTF_8);
         byte[] keyBytes = secretBytes.length < 32
                 ? Arrays.copyOf(secretBytes, 32)
-                : Arrays.copyOf(secretBytes, 32);
+                : secretBytes;
         signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
