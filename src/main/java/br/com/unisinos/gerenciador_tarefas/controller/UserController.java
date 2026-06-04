@@ -57,4 +57,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional
+    @PutMapping
+    public ResponseEntity<UserDetailResponse> update(
+            @RequestBody @Valid UpdateUserRequest request
+    ) {
+        return ResponseEntity.ok(service.update(null, request));
+    }
 }

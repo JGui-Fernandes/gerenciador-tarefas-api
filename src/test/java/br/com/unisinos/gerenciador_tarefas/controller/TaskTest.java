@@ -4,6 +4,7 @@ import br.com.unisinos.gerenciador_tarefas.constants.Endpoints;
 import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
 import br.com.unisinos.gerenciador_tarefas.constants.JsonPath;
 import br.com.unisinos.gerenciador_tarefas.dto.request.task.CreateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.task.UpdateTaskRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.task.ListTaskResponse;
 import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
@@ -55,10 +56,6 @@ class TaskTest {
         CreateTaskRequest request =
                 TaskBody.createTaskFullBody();
 
-        when(service.create(any(CreateTaskRequest.class)))
-                .thenReturn(
-                        TaskMock.taskDetailResponse()
-                );
 
         mockMvc.perform(post(Endpoints.TASKS)
                         .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
@@ -74,12 +71,9 @@ class TaskTest {
         CreateTaskRequest request =
                 TaskBody.createTaskMandatoryBody();
 
-        when(service.create(any(CreateTaskRequest.class)))
-                .thenReturn(
-                        TaskMock.taskDetailResponse()
-                );
 
         mockMvc.perform(post(Endpoints.TASKS)
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
                 .andExpect(status().isCreated())
@@ -90,6 +84,7 @@ class TaskTest {
     void shouldNotCreateTaskWithNoAttributesError() throws Exception {
 
         mockMvc.perform(post(Endpoints.TASKS)
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest());
@@ -103,7 +98,8 @@ class TaskTest {
                         TaskMock.taskDetailResponse()
                 );
 
-        mockMvc.perform(get(Endpoints.TASKS + "/1"))
+        mockMvc.perform(get(Endpoints.TASKS + "/1")
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).isNotEmpty())
@@ -127,6 +123,7 @@ class TaskTest {
         mockMvc.perform(
                         get(Endpoints.TASKS)
                                 .param("assignedTo", "1")
+                                .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -143,12 +140,11 @@ class TaskTest {
 
         when(service.findById(1L))
                 .thenThrow(
-                        new TaskNotFoundException(
-                                error.message()
-                        )
+                        new TaskNotFoundException()
                 );
 
-        mockMvc.perform(get(Endpoints.TASKS + "/1"))
+        mockMvc.perform(get(Endpoints.TASKS + "/1")
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE)
                         .value(error.statusCode()))
@@ -164,14 +160,13 @@ class TaskTest {
 
         when(service.findAllAssignedTo(1L))
                 .thenThrow(
-                        new TaskNotFoundException(
-                                error.message()
-                        )
+                        new TaskNotFoundException()
                 );
 
         mockMvc.perform(
                 get(Endpoints.TASKS)
-                        .param("assignedTo", "1"))
+                        .param("assignedTo", "1")
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE)
                         .value(error.statusCode()))
@@ -186,7 +181,7 @@ class TaskTest {
 
         when(service.update(
                 eq(1L),
-                any(CreateTaskRequest.class)
+                any(UpdateTaskRequest.class)
                     ))
                 .thenReturn(
                         TaskMock.taskDetailResponse()
@@ -194,7 +189,8 @@ class TaskTest {
 
         mockMvc.perform(put(Endpoints.TASKS + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtils.toJson(request)))
+                        .content(JsonUtils.toJson(request))
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).value(request.name()))
