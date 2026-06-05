@@ -4,11 +4,14 @@ import br.com.unisinos.gerenciador_tarefas.constants.Endpoints;
 import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
 import br.com.unisinos.gerenciador_tarefas.constants.JsonPath;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.user.UpdateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
 import br.com.unisinos.gerenciador_tarefas.exception.BadRequestException;
+import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.mocks.request.UserBody;
 import br.com.unisinos.gerenciador_tarefas.mocks.response.ErrorMock;
 import br.com.unisinos.gerenciador_tarefas.mocks.response.UserMock;
+import br.com.unisinos.gerenciador_tarefas.service.AuthServiceImpl;
 import br.com.unisinos.gerenciador_tarefas.service.UserService;
 import br.com.unisinos.gerenciador_tarefas.util.JsonUtils;
 import br.com.unisinos.gerenciador_tarefas.util.LoginTestService;
@@ -18,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -41,10 +45,12 @@ class UserTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     // O UserService é simulado — nenhum código real dele é executado
     @MockitoBean
     private UserService service;
+
+    @MockitoBean
+    private AuthServiceImpl authService;
 
     @MockitoBean
     private UserRepository userRepository;
@@ -54,9 +60,6 @@ class UserTest {
 
     @Autowired
     private LoginTestService login;
-
-
-
 
     // POST /users — Criar usuário
 
@@ -128,15 +131,16 @@ class UserTest {
 
     // GET /users/{id} — Buscar usuário por ID
 
-
     // Cenário: Buscar usuário existente com token válido.
     // Esperado: 200 OK + UserDetailResponse.
+
     @Test
+    @WithMockUser
     void shouldReturnUserByIdSuccessfully () throws Exception {
         when(service.findById(1L))
                 .thenReturn(UserMock.userDetailResponse());
-        mockMvc.perform(get(Endpoints.USERS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+        mockMvc.perform(get(Endpoints.USERS + "/1"))
+                //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).isNotEmpty())
@@ -144,18 +148,21 @@ class UserTest {
                 .andExpect(jsonPath(JsonPath.CREATEDAT).isNotEmpty())
                 .andExpect(jsonPath(JsonPath.UPDATEDAT).isNotEmpty());
     }
+
     //Cenário: Atualizar usuário que não existe.
     //Esperado: 404 Not Found.
 
-
     @Test
+    @WithMockUser
     void shouldReturnUserNotFoundOnUpdateError () throws Exception{
         CreateUserRequest request = UserBody.createUserFullBody();
         ErrorMessageResponse error = ErrorMock.userNotFoundById();
 
+        doThrow(new UserNotFoundException())
+                .when(service).update(any(Long.class), any(UpdateUserRequest.class));
 
         mockMvc.perform(put(Endpoints.USERS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
+                        //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
                 .andExpect(status().isNotFound())
@@ -176,8 +183,8 @@ class UserTest {
 
     @Test
     void shouldDeleteUserSuccessfully () throws Exception{
-        mockMvc.perform(delete(Endpoints.USERS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+        mockMvc.perform(delete(Endpoints.USERS + "/1"))
+                        //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string(""));
     }

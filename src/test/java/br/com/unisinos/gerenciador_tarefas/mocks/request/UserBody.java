@@ -1,6 +1,7 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.request;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.user.UpdateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 
 import java.time.LocalDate;
@@ -51,6 +52,7 @@ public class UserBody {
         );
     }
 }
+
 
 //    public static CreateUserRequest createUserWithInvalidPhone() {
 //        return new CreateUserRequest(

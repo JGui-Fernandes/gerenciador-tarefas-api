@@ -38,7 +38,7 @@ public class UserController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @Transactional
+    //@Transactional
     @PutMapping("/{id}")
     public ResponseEntity<UserDetailResponse> update(
             @PathVariable Long id,
@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(service.update(id, request));
     }
 
-    @Transactional
+    //@Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id
