@@ -48,7 +48,7 @@ public class LoginTestService {
                         LoginResponse.class
                 );
 
-        return response.token();
+        return "Bearer " + response.token();
     }
 
 }

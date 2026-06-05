@@ -5,6 +5,7 @@ import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
 import br.com.unisinos.gerenciador_tarefas.constants.JsonPath;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
+import br.com.unisinos.gerenciador_tarefas.exception.BadRequestException;
 import br.com.unisinos.gerenciador_tarefas.mocks.request.UserBody;
 import br.com.unisinos.gerenciador_tarefas.mocks.response.ErrorMock;
 import br.com.unisinos.gerenciador_tarefas.mocks.response.UserMock;
@@ -114,8 +115,9 @@ class UserTest {
         ErrorMessageResponse error = ErrorMock.duplicateEmail();
 
 
-        doThrow(new IllegalArgumentException(error.message()))
+        doThrow(new BadRequestException(ErrorMessages.REUSED_EMAIL))
                 .when(service).create(any(CreateUserRequest.class));
+
         mockMvc.perform(post(Endpoints.USERS)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
@@ -123,6 +125,7 @@ class UserTest {
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE).value(error.statusCode()))
                 .andExpect(jsonPath(JsonPath.ERROR_MESSAGE).value(ErrorMessages.REUSED_EMAIL));
     }
+
     // GET /users/{id} — Buscar usuário por ID
 
 

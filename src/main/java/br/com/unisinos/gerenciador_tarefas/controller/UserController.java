@@ -20,7 +20,7 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    @Transactional
+//    @Transactional
     @PostMapping
     public ResponseEntity<Void> create(
             @RequestBody @Valid CreateUserRequest request
