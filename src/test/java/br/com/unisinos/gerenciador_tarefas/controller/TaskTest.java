@@ -170,8 +170,8 @@
 //                );
 //
 //        mockMvc.perform(
-//                get(Endpoints.TASKS)
-//                        .param("assignedTo", "1"))
+//                        get(Endpoints.TASKS)
+//                                .param("assignedTo", "1"))
 //                .andExpect(status().isNotFound())
 //                .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE)
 //                        .value(error.statusCode()))
@@ -187,7 +187,7 @@
 //        when(service.update(
 //                eq(1L),
 //                any(CreateTaskRequest.class)
-//                    ))
+//        ))
 //                .thenReturn(
 //                        TaskMock.taskDetailResponse()
 //                );

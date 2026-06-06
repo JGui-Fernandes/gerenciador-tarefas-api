@@ -72,10 +72,8 @@ class UserTest {
     void shouldCreateUserWithAllAttributesSuccessfully () throws Exception{
         CreateUserRequest request = UserBody.createUserFullBody();
 
-
 //        when(service.create(any(CreateUserRequest.class)))
 //                .thenReturn(UserMock.userDetailResponse());
-
 
         mockMvc.perform(post(Endpoints.USERS)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +97,6 @@ class UserTest {
     @Test
     void shouldCreateUserWithMandatoryAttributesSuccessfully() throws Exception {
         CreateUserRequest request = UserBody.createUserMandatoryBody();
-
 
         mockMvc.perform(post(Endpoints.USERS)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -182,6 +179,7 @@ class UserTest {
 
 
     @Test
+    @WithMockUser
     void shouldDeleteUserSuccessfully () throws Exception{
         mockMvc.perform(delete(Endpoints.USERS + "/1"))
                         //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
@@ -209,16 +207,17 @@ class UserTest {
 
 
     @Test
+    @WithMockUser
     void shouldReturnUserNotFoundOnDeleteError() throws Exception {
         ErrorMessageResponse error = ErrorMock.userNotFoundById();
 
+        //        when(service.delete(1L))
+//        .thenThrow(new UserNotFoundException());
+        doThrow(new UserNotFoundException())
+                .when(service).delete(1L);
 
-        //when(service.delete(1L))
-        //.thenThrow(new UserNotFoundException());
-
-
-        mockMvc.perform(delete(Endpoints.USERS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+        mockMvc.perform(delete(Endpoints.USERS + "/1"))
+                        //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE).value(error.statusCode()))
                 .andExpect(jsonPath(JsonPath.ERROR_MESSAGE)

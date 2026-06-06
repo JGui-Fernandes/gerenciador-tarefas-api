@@ -2,7 +2,12 @@ package br.com.unisinos.gerenciador_tarefas.mocks.request;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.UpdateUserRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.UserDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 
