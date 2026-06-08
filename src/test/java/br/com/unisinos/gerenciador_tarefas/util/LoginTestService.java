@@ -25,8 +25,8 @@ public class LoginTestService {
     public String loginSuccessful() throws Exception {
 
         LoginRequest request = new LoginRequest(
-                "admin@email.com",
-                "123456"
+                "arthur@email",
+                "123"
         );
 
         MvcResult result = mockMvc.perform(
