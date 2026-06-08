@@ -16,6 +16,10 @@ public class JsonPath {
     public static final String TASK_ASSIGNEE = "$.assignee";
     public static final String TASK_PARTICIPANTS = "$.participants";
 
+    public static final String USER_EMAIL     = "$.email";
+    public static final String USER_BIRTHDATE = "$.birthDate";
+    public static final String USER_PHONE     = "$.phone";
+
     public static final String ERROR_STATUS_CODE = "$.statusCode";
     public static final String ERROR_MESSAGE = "$.message";
 }
