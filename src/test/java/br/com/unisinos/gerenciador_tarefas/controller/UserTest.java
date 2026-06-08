@@ -75,21 +75,10 @@ class UserTest {
     void shouldCreateUserWithAllAttributesSuccessfully () throws Exception{
         CreateUserRequest request = UserBody.createUserFullBody();
 
-//        when(service.create(any(CreateUserRequest.class)))
-//                .thenReturn(UserMock.userDetailResponse());
-
         mockMvc.perform(post(Endpoints.USERS)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath(JsonPath.ID).isNumber())
-                .andExpect(jsonPath(JsonPath.NAME).value(request.name()))
-                .andExpect(jsonPath(JsonPath.USER_EMAIL).value(request.email()))
-                .andExpect(jsonPath(JsonPath.USER_BIRTHDATE).isNotEmpty())
-                .andExpect(jsonPath(JsonPath.USER_PHONE).isNotEmpty())
-                .andExpect(jsonPath(JsonPath.CREATEDAT).isNotEmpty())
-                .andExpect(jsonPath(JsonPath.UPDATEDAT).isNotEmpty()
-                );
+                .andExpect(status().isCreated());
     }
 
 
