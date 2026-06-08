@@ -33,7 +33,7 @@ public class UserController {
     @Autowired
     private UserService service;
 
-//    @Transactional
+    @Transactional
     @PostMapping
     @Operation(
             summary = "Criar um novo usuário",
@@ -107,7 +107,7 @@ public class UserController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    //@Transactional
+    @Transactional
     @PutMapping("/{id}")
     @Operation(
             summary = "Editar usuário",
@@ -170,7 +170,7 @@ public class UserController {
         return ResponseEntity.ok(service.update(id, request));
     }
 
-    //@Transactional
+    @Transactional
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Deletar usuário",
