@@ -11,7 +11,7 @@ public class UserMock {
     public static UserDetailResponse userDetailResponse() {
 
         return new UserDetailResponse(
-                1L, //L de Long, uma string com maior capacidade de variáveis
+                1L,
                 "John",
                 "john@email.com",
                 LocalDate.of(2000, 1, 1),
