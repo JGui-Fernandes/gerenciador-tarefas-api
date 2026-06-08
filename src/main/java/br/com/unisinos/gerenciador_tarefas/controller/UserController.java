@@ -4,6 +4,7 @@ import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.UpdateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ValidationErrorResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.user.UserDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.service.UserService;
 
@@ -23,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -249,5 +252,10 @@ public class UserController {
             @RequestBody @Valid UpdateUserRequest request
     ) {
         return ResponseEntity.ok(service.update(null, request));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<ListUserResponse>> listActiveUsers(){
+        return ResponseEntity.ok(service.listActiveUsers());
     }
 }

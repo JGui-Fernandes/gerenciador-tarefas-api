@@ -2,6 +2,7 @@ package br.com.unisinos.gerenciador_tarefas.service;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.UpdateUserRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.user.UserDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.entities.User;
 import br.com.unisinos.gerenciador_tarefas.exception.BadRequestException;
@@ -11,6 +12,8 @@ import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -92,6 +95,14 @@ public class UserService {
         u.setActive(false);
 
         userRepository.save(u);
+    }
+
+    public List<ListUserResponse> listActiveUsers(){
+        List<User> list = userRepository.findByIsActiveTrue();
+
+        return list.stream()
+                .map(ListUserResponse::new)
+                .toList();
     }
 
 }

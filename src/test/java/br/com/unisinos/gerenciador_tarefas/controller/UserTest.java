@@ -48,7 +48,6 @@ class UserTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // O UserService é simulado — nenhum código real dele é executado
     @MockitoBean
     private UserService service;
 
@@ -64,12 +63,8 @@ class UserTest {
     @Autowired
     private LoginTestService login;
 
-    // POST /users — Criar usuário
-
-
     //Cenário: Criar usuário com todos os campos preenchidos.
     //Esperado: 201 Created + UserDetailResponse no body.
-
 
     @Test
     void shouldCreateUserWithAllAttributesSuccessfully () throws Exception{
@@ -85,7 +80,6 @@ class UserTest {
     //Cenário: Criar usuário apenas com campos obrigatórios (sem birthDate e phone).
     //Esperado: 201 Created.
 
-
     @Test
     void shouldCreateUserWithMandatoryAttributesSuccessfully() throws Exception {
         CreateUserRequest request = UserBody.createUserMandatoryBody();
@@ -99,7 +93,6 @@ class UserTest {
 
     //Cenário: Tentar criar usuário com email duplicado.
     //Esperado: 400 Bad Request + mensagem de email em uso.
-
 
     @Test
     void shouldNotCreateUserWithDuplicateEmailError () throws Exception {
@@ -118,7 +111,6 @@ class UserTest {
                 .andExpect(jsonPath(JsonPath.ERROR_MESSAGE).value(ErrorMessages.REUSED_EMAIL));
     }
 
-    // GET /users/{id} — Buscar usuário por ID
 
     // Cenário: Buscar usuário existente com token válido.
     // Esperado: 200 OK + UserDetailResponse.
@@ -129,7 +121,6 @@ class UserTest {
         when(service.findById(1L))
                 .thenReturn(UserMock.userDetailResponse());
         mockMvc.perform(get(Endpoints.USERS + "/1"))
-                //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).isNotEmpty())
@@ -151,7 +142,6 @@ class UserTest {
                 .when(service).update(any(Long.class), any(UpdateUserRequest.class));
 
         mockMvc.perform(put(Endpoints.USERS + "/1")
-                        //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
                 .andExpect(status().isNotFound())
@@ -162,19 +152,13 @@ class UserTest {
 
     }
 
-
-    // DELETE /users/{id} — Deletar usuário
-
-
     //Cenário: Deletar usuário existente com autenticação válida.
     //Esperado: 204 No Content (sem body na resposta).
-
 
     @Test
     @WithMockUser
     void shouldDeleteUserSuccessfully () throws Exception{
         mockMvc.perform(delete(Endpoints.USERS + "/1"))
-                        //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string(""));
     }
@@ -182,7 +166,6 @@ class UserTest {
 
     //Cenário: Tentar deletar sem estar logado.
     //Esperado: 401 Unauthorized.
-
 
     @Test
     void shouldReturnUnauthorizedOnDeleteWithoutTokenError () throws Exception {
@@ -197,19 +180,15 @@ class UserTest {
     //Cenário: Tentar deletar usuário que não existe.
     //Esperado: 404 Not Found.
 
-
     @Test
     @WithMockUser
     void shouldReturnUserNotFoundOnDeleteError() throws Exception {
         ErrorMessageResponse error = ErrorMock.userNotFoundById();
 
-        //        when(service.delete(1L))
-//        .thenThrow(new UserNotFoundException());
         doThrow(new UserNotFoundException())
                 .when(service).delete(1L);
 
         mockMvc.perform(delete(Endpoints.USERS + "/1"))
-                        //.header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE).value(error.statusCode()))
                 .andExpect(jsonPath(JsonPath.ERROR_MESSAGE)
