@@ -1,4 +1,4 @@
-package br.com.unisinos.gerenciador_tarefas.scenarios;
+package br.com.unisinos.gerenciador_tarefas.controller;
 
 import br.com.unisinos.gerenciador_tarefas.constants.Endpoints;
 import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
@@ -7,6 +7,7 @@ import br.com.unisinos.gerenciador_tarefas.dto.request.task.CreateTaskRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.request.task.UpdateTaskRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.task.ListTaskResponse;
+import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundByUserException;
 import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.mocks.request.TaskBody;
 import br.com.unisinos.gerenciador_tarefas.mocks.response.ErrorMock;
@@ -160,7 +161,7 @@ class TaskTest {
 
         when(service.findAllAssignedTo(1L))
                 .thenThrow(
-                        new TaskNotFoundException()
+                        new TaskNotFoundByUserException()
                 );
 
         mockMvc.perform(

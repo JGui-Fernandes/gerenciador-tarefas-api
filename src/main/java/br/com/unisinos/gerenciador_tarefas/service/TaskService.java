@@ -6,6 +6,7 @@ import br.com.unisinos.gerenciador_tarefas.dto.response.task.ListTaskResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.task.TaskDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.entities.Task;
 import br.com.unisinos.gerenciador_tarefas.entities.User;
+import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundByUserException;
 import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.repository.TaskRepository;
@@ -74,7 +75,7 @@ public class TaskService {
 
         User u = userRepository.findById(assignedTo)
                 .orElseThrow(()->
-                        new UserNotFoundException()
+                        new TaskNotFoundByUserException()
                 );
         return u.getAssignedTasks()
                     .stream()

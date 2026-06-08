@@ -102,4 +102,20 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(TaskNotFoundByUserException.class)
+    public ResponseEntity<ErrorMessageResponse> handleTaskNotFound(
+            TaskNotFoundByUserException ex
+    ) {
+
+        ErrorMessageResponse response =
+                new ErrorMessageResponse(
+                        HttpStatus.NOT_FOUND.value(),
+                        ex.getMessage()
+                );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
 }

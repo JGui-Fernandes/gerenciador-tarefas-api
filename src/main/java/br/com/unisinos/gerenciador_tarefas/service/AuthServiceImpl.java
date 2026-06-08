@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
         User user = userRepository
-                .findByEmail(request.email())
+                .findByEmailAndIsActiveTrue(request.email())
                 .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
