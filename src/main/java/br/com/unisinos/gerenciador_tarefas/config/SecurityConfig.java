@@ -1,5 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.config;
 
+import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -35,7 +36,11 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST,"/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/list").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/users/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/users/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole(UserRole.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
