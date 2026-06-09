@@ -10,6 +10,7 @@ import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,17 +55,24 @@ public class UserService {
     }
 
     public UserDetailResponse update(Long id, UpdateUserRequest request){
-        User u = userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(UserNotFoundException::new
-                );
+        User u;
+        if(id != null){
+            u = userRepository.findByIdAndIsActiveTrue(id)
+                    .orElseThrow(UserNotFoundException::new
+                    );
+        }
+        else{
+            u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        }
+
         if(request.phone() != null && !request.phone().isBlank()){
-            if (userRepository.findByPhone(request.phone()).isPresent()) {
+            if (userRepository.findByPhoneAndIdNot(request.phone(), id).isPresent()) {
                 throw new BadRequestException("Telefone já cadastrado");
             }
             u.setPhone(request.phone());
         }
         if(request.email() != null && !request.email().isBlank()){
-            if (userRepository.findByEmail(request.email()).isPresent()) {
+            if (userRepository.findByEmailAndIdNot(request.email(), id).isPresent()) {
                 throw new BadRequestException("Email já cadastrado");
             }
             u.setEmail(request.email());
@@ -103,6 +111,20 @@ public class UserService {
         return list.stream()
                 .map(ListUserResponse::new)
                 .toList();
+    }
+
+    public UserDetailResponse detailLoggedUser(){
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return new UserDetailResponse(u);
+    }
+
+    public void deleteLoggedUser(){
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        u.setActive(false);
+
+        userRepository.save(u);
     }
 
 }

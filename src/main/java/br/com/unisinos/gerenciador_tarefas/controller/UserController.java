@@ -255,7 +255,109 @@ public class UserController {
     }
 
     @GetMapping("/list")
+    @Operation(
+            summary = "Listar usuários ativos",
+            description = "Retorna a lista de todos os usuários ativos no sistema"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de usuários retornada com sucesso",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = ListUserResponse.class
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Usuário não autenticado",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = ErrorMessageResponse.class
+                            ),
+                            examples = @ExampleObject(
+                                    value = """
+                                {
+                                  "statusCode": 401,
+                                  "message": "Apenas usuários logados podem consultar essa informação"
+                                }
+                                """
+                            )
+                    )
+            )
+    })
     public ResponseEntity<List<ListUserResponse>> listActiveUsers(){
         return ResponseEntity.ok(service.listActiveUsers());
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "Buscar usuário autenticado",
+            description = "Retorna os detalhes do próprio usuário autenticado, sem necessidade de informar o ID"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Usuário encontrado",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = UserDetailResponse.class
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Usuário não autenticado",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = ErrorMessageResponse.class
+                            ),
+                            examples = @ExampleObject(
+                                    value = """
+                                {
+                                  "statusCode": 401,
+                                  "message": "Apenas usuários logados podem consultar essa informação"
+                                }
+                                """
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<UserDetailResponse> detailLoggedUser(){
+        return ResponseEntity.ok(service.detailLoggedUser());
+    }
+
+    @DeleteMapping
+    @Operation(
+            summary = "Deletar usuário autenticado",
+            description = "Realiza a desativação do próprio usuário autenticado (soft delete), sem necessidade de informar o ID"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Usuário deletado com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Usuário não autenticado",
+                    content = @Content(
+                            schema = @Schema(
+                                    implementation = ErrorMessageResponse.class
+                            ),
+                            examples = @ExampleObject(
+                                    value = """
+                                {
+                                  "statusCode": 401,
+                                  "message": "Apenas usuários logados podem consultar essa informação"
+                                }
+                                """
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<Void> removeLoggedUser(){
+        service.deleteLoggedUser();
+        return ResponseEntity.noContent().build();
     }
 }

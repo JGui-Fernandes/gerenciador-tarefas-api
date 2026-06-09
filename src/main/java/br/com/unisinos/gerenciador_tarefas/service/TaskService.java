@@ -75,7 +75,7 @@ public class TaskService {
 
         User u = userRepository.findById(assignedTo)
                 .orElseThrow(()->
-                        new TaskNotFoundByUserException()
+                        new UserNotFoundException()
                 );
         return u.getAssignedTasks()
                     .stream()

@@ -56,7 +56,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String email = jwtUtil.extractUsername(token);
 
-        Optional<User> found = userRepository.findByEmail(email);
+        Optional<User> found = userRepository.findByEmailAndIsActiveTrue(email);
 
         found.ifPresent(user -> {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {

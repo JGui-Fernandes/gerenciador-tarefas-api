@@ -16,6 +16,6 @@ public record UserDetailResponse(
 
 ) {
     public UserDetailResponse(User u) {
-        this(u.getId(), u.getName(), u.getEmail(), u.getBirthDate(), u.getPhone(), u.getCreatedAt(), u.getCreatedAt());
+        this(u.getId(), u.getName(), u.getEmail(), u.getBirthDate(), u.getPhone(), u.getCreatedAt(), u.getUpdatedAt());
     }
 }
