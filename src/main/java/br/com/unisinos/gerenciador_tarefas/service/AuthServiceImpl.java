@@ -1,8 +1,8 @@
 package br.com.unisinos.gerenciador_tarefas.service;
 
-import br.com.unisinos.gerenciador_tarefas.dto.request.LoginRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.response.ListUserResponse;
-import br.com.unisinos.gerenciador_tarefas.dto.response.TokenResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.request.auth.LoginRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.auth.LoginResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
 import br.com.unisinos.gerenciador_tarefas.entities.User;
 import br.com.unisinos.gerenciador_tarefas.exception.InvalidCredentialsException;
 import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public TokenResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user = userRepository
                 .findByEmail(request.email())
                 .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
                 user.getEmail()
         );
 
-        return new TokenResponse(token, userResponse);
+        return new LoginResponse(token, userResponse);
     }
 
     @Override

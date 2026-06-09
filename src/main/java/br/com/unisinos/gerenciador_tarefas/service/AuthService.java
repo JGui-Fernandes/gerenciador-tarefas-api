@@ -1,11 +1,11 @@
 package br.com.unisinos.gerenciador_tarefas.service;
 
-import br.com.unisinos.gerenciador_tarefas.dto.request.LoginRequest;
-import br.com.unisinos.gerenciador_tarefas.dto.response.TokenResponse;
+import br.com.unisinos.gerenciador_tarefas.dto.request.auth.LoginRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.auth.LoginResponse;
 
 public interface AuthService {
 
-    TokenResponse login(LoginRequest request);
+    LoginResponse login(LoginRequest request);
 
     void logout(String token);
 }

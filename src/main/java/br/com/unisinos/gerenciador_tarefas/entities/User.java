@@ -85,14 +85,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isActive;
+    }
 
-    public void setRole(UserRole role){
-        if(role != null){
+    public void setRole(UserRole role) {
+        if (role != null) {
             this.role = role;
-        }
-        else{
+        } else {
             this.role = UserRole.USER;
         }
-
     }
 }
