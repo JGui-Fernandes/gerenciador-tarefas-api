@@ -1,4 +1,4 @@
-package br.com.unisinos.gerenciador_tarefas.scenarios;
+package br.com.unisinos.gerenciador_tarefas.controller;
 
 import br.com.unisinos.gerenciador_tarefas.constants.Endpoints;
 import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
