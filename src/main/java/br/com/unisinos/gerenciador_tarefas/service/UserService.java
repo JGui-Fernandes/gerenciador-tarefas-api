@@ -66,7 +66,7 @@ public class UserService {
             User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             u = userRepository.findByIdAndIsActiveTrue(principal.getId())
                     .orElseThrow(UserNotFoundException::new);
-            id = u.getId(); // garante que id não seja null nas validações abaixo
+            id = u.getId();
         }
 
         if (request.phone() != null && !request.phone().isBlank()) {
