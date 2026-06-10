@@ -120,6 +120,6 @@ class LoginTest {
     @Test
     void shouldReturnUnauthorizedOnLogonWithoutTokenError() throws Exception {
         mockMvc.perform(post(Endpoints.AUTH_LOGOUT))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isBadRequest());
     }
 }

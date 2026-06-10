@@ -20,7 +20,7 @@ public final class ErrorMessages {
     public static final String FILL_ALL_FIELDS = "Preencha todos os campos obrigatórios";
 
     public static final String UNLOGGED_USER = "Apenas usuários logados podem consultar essa informação";
-    public static final String NOT_ALLOWED_USER = "Você não tem acesso à essas informações";
+    public static final String NOT_ALLOWED_USER = "Você não tem permissão para acessar esse recurso";
 
     public static final String USER_NOT_FOUND_BY_ID = "Nenhum usuário encontrado com esse ID";
     public static final String NO_REGISTERED_USER = "Nenhum usuário cadastrado";

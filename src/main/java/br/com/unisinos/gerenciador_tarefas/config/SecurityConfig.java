@@ -46,9 +46,16 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(401);
-                            response.setContentType("application/json");
+                            response.setContentType("application/json;charset=UTF-8");
                             response.getWriter().write(
                                     "{\"statusCode\":401,\"message\":\"Apenas usuários logados podem consultar essa informação\"}"
+                            );
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(403);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write(
+                                    "{\"statusCode\":403,\"message\":\"Você não tem permissão para acessar esse recurso\"}"
                             );
                         })
                 )

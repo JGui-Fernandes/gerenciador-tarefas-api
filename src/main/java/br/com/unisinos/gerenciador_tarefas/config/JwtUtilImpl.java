@@ -55,6 +55,7 @@ public class JwtUtilImpl implements JwtUtil {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception ex) {
+            System.out.println("Token inválido: " + ex.getClass().getName() + " - " + ex.getMessage());
             return false;
         }
     }

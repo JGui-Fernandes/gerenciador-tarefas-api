@@ -20,9 +20,20 @@ public record TaskDetailResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public TaskDetailResponse(Task task){
-        this(task.getId(), task.getName(), task.getDescription(), task.getDeadline(), task.getStatus(),
-                new ListUserResponse(task.getCreator()), new ListUserResponse(task.getAssignee()),
-                task.getParticipants().stream().map(ListUserResponse::new).toList(), task.getCreatedAt(), task.getUpdatedAt());
+    public TaskDetailResponse(Task task) {
+        this(
+                task.getId(),
+                task.getName(),
+                task.getDescription(),
+                task.getDeadline(),
+                task.getStatus(),
+                task.getCreator() != null ? new ListUserResponse(task.getCreator()) : null,
+                task.getAssignee() != null ? new ListUserResponse(task.getAssignee()) : null,
+                task.getParticipants() != null
+                        ? task.getParticipants().stream().map(ListUserResponse::new).toList()
+                        : List.of(),
+                task.getCreatedAt(),
+                task.getUpdatedAt()
+        );
     }
 }
