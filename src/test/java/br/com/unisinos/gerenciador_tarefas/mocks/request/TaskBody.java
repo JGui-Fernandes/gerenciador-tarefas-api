@@ -1,6 +1,7 @@
 package br.com.unisinos.gerenciador_tarefas.mocks.request;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.task.CreateTaskRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.request.task.UpdateTaskRequest;
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
 import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 
@@ -22,6 +23,17 @@ public class TaskBody {
                 TaskStatus.IN_PROGRESS,
                 1L,
                 participantsIdList
+        );
+    }
+
+    public static UpdateTaskRequest updateTaskFullBody(){
+
+        return new UpdateTaskRequest(
+                "Criar documentação da API",
+                "Documentar endpoints",
+                LocalDate.now(),
+                TaskStatus.IN_PROGRESS,
+                1L
         );
     }
 
@@ -48,6 +60,17 @@ public class TaskBody {
         return new CreateTaskRequest(
                 null,
                 null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public static UpdateTaskRequest updateName(){
+
+        return new UpdateTaskRequest(
+                "Nome atualizado",
                 null,
                 null,
                 null,

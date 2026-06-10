@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -40,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class TaskTest {
+class TaskControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,6 +52,8 @@ class TaskTest {
     @Autowired
     private LoginTestService login;
 
+    // Cenário: Criar tarefa com todos os campos preenchidos com usuário logado.
+    // Esperado: 201 Created (sem body na resposta).
     @Test
     void shouldCreateTaskWithAllAttributesSuccessfully() throws Exception {
 
@@ -66,6 +69,8 @@ class TaskTest {
                 .andExpect(content().string(""));
     }
 
+    // Cenário: Criar tarefa apenas com campos obrigatórios com usuário logado.
+    // Esperado: 201 Created (sem body na resposta).
     @Test
     void shouldCreateTaskWithMandatoryAttributesSuccessfully() throws Exception {
 
@@ -81,9 +86,11 @@ class TaskTest {
                 .andExpect(content().string(""));
     }
 
+
+    // Cenário: Tentar criar tarefa sem nenhum campo preenchido.
+    // Esperado: 400 Bad Request.
     @Test
     void shouldNotCreateTaskWithNoAttributesError() throws Exception {
-
         mockMvc.perform(post(Endpoints.TASKS)
                         .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,6 +98,8 @@ class TaskTest {
                 .andExpect(status().isBadRequest());
     }
 
+    // Cenário: Buscar tarefa por ID existente com usuário logado.
+    // Esperado: 200 OK + TaskDetailResponse.
     @Test
     void shouldReturnTaskByIdSuccessfully() throws Exception {
 
@@ -110,6 +119,8 @@ class TaskTest {
                 .andExpect(jsonPath(JsonPath.UPDATEDAT).isNotEmpty());
     }
 
+    // Cenário: Buscar tarefas atribuídas a um usuário existente.
+    // Esperado: 200 OK + lista de ListTaskResponse.
     @Test
     void shouldReturnTaskByUserSuccessfully() throws Exception {
 
@@ -133,6 +144,9 @@ class TaskTest {
                 .andExpect(jsonPath("$[0].status").isNotEmpty());
     }
 
+
+    // Cenário: Buscar tarefa por ID que não existe.
+    // Esperado: 404 Not Found.
     @Test
     void shouldReturnTaskNotFoundByIdError() throws Exception {
 
@@ -153,6 +167,8 @@ class TaskTest {
                         .value(ErrorMessages.TASK_NOT_FOUND_BY_ID));
     }
 
+    // Cenário: Buscar tarefas de um usuário que não existe.
+    // Esperado: 404 Not Found.
     @Test
     void shouldReturnTaskNotFoundByUserError() throws Exception {
 
@@ -175,10 +191,12 @@ class TaskTest {
                         .value(ErrorMessages.TASK_NOT_FOUND_BY_USER));
     }
 
+    // Cenário: Atualizar todos os campos de uma tarefa existente com usuário logado.
+    // Esperado: 200 OK + TaskDetailResponse com os dados atualizados.
     @Test
-    void shouldUpdateAllAttributesSuccessfully() throws Exception{
-        CreateTaskRequest request =
-                TaskBody.createTaskFullBody();
+    void shouldUpdateAllAttributesSuccessfully() throws Exception {
+        UpdateTaskRequest request =
+                TaskBody.updateTaskFullBody();
 
         when(service.update(
                 eq(1L),
@@ -205,5 +223,71 @@ class TaskTest {
                 .andExpect(jsonPath(JsonPath.CREATEDAT).isNotEmpty())
 
         ;
+    }
+
+    // Cenário: Atualizar apenas o nome de uma tarefa existente com usuário logado.
+    // Esperado: 200 OK + TaskDetailResponse com o nome atualizado.
+    @Test
+    void shouldUpdateNameSuccessfully() throws Exception {
+        UpdateTaskRequest request =
+                TaskBody.updateName();
+
+        when(service.update(
+                eq(1L),
+                any(UpdateTaskRequest.class)
+        ))
+                .thenReturn(
+                        TaskMock.taskDetailResponse()
+                );
+
+        mockMvc.perform(put(Endpoints.TASKS + "/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtils.toJson(request))
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(JsonPath.ID).isNumber())
+                .andExpect(jsonPath(JsonPath.NAME).isNotEmpty())
+                .andExpect(jsonPath(JsonPath.UPDATEDAT).isNotEmpty())
+                .andExpect(jsonPath(JsonPath.CREATEDAT).isNotEmpty())
+        ;
+    }
+
+    // Cenário: Deletar tarefa existente com usuário logado.
+    // Esperado: 204 No Content (sem body na resposta).
+
+    @Test
+    void shouldDeleteTaskByIdSuccessfully() throws Exception {
+        mockMvc.perform(delete(Endpoints.TASKS + "/1")
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+    }
+
+    // Cenário: Deletar tarefa que não existe.
+    // Esperado: 404 Not Found.
+
+    @Test
+    void shouldReturnTaskNotFoundOnDeleteError() throws Exception {
+        ErrorMessageResponse error = ErrorMock.taskNotFoundById();
+
+        doThrow(new TaskNotFoundException())
+                .when(service).delete(1L);
+
+        mockMvc.perform(delete(Endpoints.TASKS + "/1")
+                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE).value(error.statusCode()))
+                .andExpect(jsonPath(JsonPath.ERROR_MESSAGE).value(ErrorMessages.TASK_NOT_FOUND_BY_ID));
+    }
+
+    // Cenário: Tentar deletar tarefa sem estar logado.
+    // Esperado: 401 Unauthorized.
+
+    @Test
+    void shouldReturnUnauthorizedOnDeleteTaskWithoutTokenError() throws Exception {
+        mockMvc.perform(delete(Endpoints.TASKS + "/1"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE).value(401))
+                .andExpect(jsonPath(JsonPath.ERROR_MESSAGE).value(ErrorMessages.UNLOGGED_USER));
     }
 }

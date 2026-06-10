@@ -1,8 +1,10 @@
 package br.com.unisinos.gerenciador_tarefas.exception;
 
+import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
+
 public class UserNotFoundException extends RuntimeException{
 
     public UserNotFoundException() {
-        super("Nenhum usuário encontrado com esse ID");
+        super(ErrorMessages.USER_NOT_FOUND_BY_ID);
     }
 }
