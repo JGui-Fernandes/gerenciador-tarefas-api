@@ -429,4 +429,4 @@ Os testes requerem que a aplicação consiga inicializar o contexto Spring. As d
 
 ## Demonstração
 
-[▶️ Clique aqui para assistir à demonstração]([https://youtu.be/seu_video](https://drive.google.com/file/d/19Ng1OaAtQQbLBu9IkBzp9xMsfURJEY5n/view?usp=sharing))
+[▶️ Clique aqui para assistir à demonstração](https://drive.google.com/file/d/19Ng1OaAtQQbLBu9IkBzp9xMsfURJEY5n/view?usp=sharing)
