@@ -10,6 +10,7 @@ import br.com.unisinos.gerenciador_tarefas.exception.BadRequestException;
 import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
 
     @Autowired
@@ -55,45 +57,49 @@ public class UserService {
 
     }
 
-    public UserDetailResponse update(Long id, UpdateUserRequest request){
+    public UserDetailResponse update(Long id, UpdateUserRequest request) {
         User u;
-        if(id != null){
+        if (id != null) {
             u = userRepository.findByIdAndIsActiveTrue(id)
-                    .orElseThrow(UserNotFoundException::new
-                    );
-        }
-        else{
-            u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                    .orElseThrow(UserNotFoundException::new);
+        } else {
+            User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            u = userRepository.findByIdAndIsActiveTrue(principal.getId())
+                    .orElseThrow(UserNotFoundException::new);
+            id = u.getId();
         }
 
-        if(request.phone() != null && !request.phone().isBlank()){
+        if (request.phone() != null && !request.phone().isBlank()) {
             if (userRepository.findByPhoneAndIdNot(request.phone(), id).isPresent()) {
                 throw new BadRequestException(ErrorMessages.REUSED_PHONE);
             }
             u.setPhone(request.phone());
         }
-        if(request.email() != null && !request.email().isBlank()){
+        if (request.email() != null && !request.email().isBlank()) {
             if (userRepository.findByEmailAndIdNot(request.email(), id).isPresent()) {
                 throw new BadRequestException(ErrorMessages.REUSED_EMAIL);
             }
             u.setEmail(request.email());
         }
-        if(request.name() != null && !request.name().isBlank()){
+        if (request.name() != null && !request.name().isBlank()) {
             u.setName(request.name());
         }
-        if(request.role() != null){
+        if (request.role() != null) {
             u.setRole(request.role());
         }
-        if(request.birthDate() != null){
+        if (request.birthDate() != null) {
             u.setBirthDate(request.birthDate());
         }
-        if(request.password()!= null && !request.password().isBlank()){
+        if (request.password() != null && !request.password().isBlank()) {
             u.setPassword(passwordEncoder.encode(request.password()));
         }
 
-        userRepository.save(u);
-        return new UserDetailResponse(u);
+        userRepository.saveAndFlush(u);
 
+        User updated = userRepository.findByIdAndIsActiveTrue(u.getId())
+                .orElseThrow(UserNotFoundException::new);
+
+        return new UserDetailResponse(updated);
     }
 
     public void delete(Long id){
