@@ -2,10 +2,7 @@ package br.com.unisinos.gerenciador_tarefas.entities;
 
 import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -24,6 +21,7 @@ import java.util.List;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
+@EqualsAndHashCode(of = "id")
 @Entity
 public class User implements UserDetails {
 
@@ -44,7 +42,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    private UserRole role = UserRole.USER;
+    private UserRole role;
 
     private boolean isActive = true;
 

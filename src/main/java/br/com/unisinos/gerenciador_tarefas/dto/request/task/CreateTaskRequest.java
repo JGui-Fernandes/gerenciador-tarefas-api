@@ -12,8 +12,6 @@ public record CreateTaskRequest(
         String description,
         LocalDate deadline,
         TaskStatus status,
-        @NotNull (message = "O campo creatorId é obrigatório")
-        Long creatorId,
         Long assigneeId,
         List<Long> participantsId
 ) {

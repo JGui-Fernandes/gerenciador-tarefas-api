@@ -2,6 +2,7 @@ package br.com.unisinos.gerenciador_tarefas.mocks.request;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.task.CreateTaskRequest;
 import br.com.unisinos.gerenciador_tarefas.enums.TaskStatus;
+import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ public class TaskBody {
                 LocalDate.now(),
                 TaskStatus.IN_PROGRESS,
                 1L,
-                2L,
                 participantsIdList
         );
     }
@@ -36,7 +36,6 @@ public class TaskBody {
                 null,
                 null,
                 1L,
-                null,
                 null
         );
     }
@@ -47,7 +46,6 @@ public class TaskBody {
         participantsIdList.add(3L);
 
         return new CreateTaskRequest(
-                null,
                 null,
                 null,
                 null,

@@ -1,7 +1,9 @@
 package br.com.unisinos.gerenciador_tarefas.config;
 
+import br.com.unisinos.gerenciador_tarefas.enums.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,10 +30,28 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/logout").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/list").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/users/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, "/users/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole(UserRole.ADMIN.name())
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(401);
+                            response.setContentType("application/json");
+                            response.getWriter().write(
+                                    "{\"statusCode\":401,\"message\":\"Apenas usuários logados podem consultar essa informação\"}"
+                            );
+                        })
+                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -6,11 +6,13 @@ import br.com.unisinos.gerenciador_tarefas.dto.response.task.ListTaskResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.task.TaskDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.entities.Task;
 import br.com.unisinos.gerenciador_tarefas.entities.User;
+import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundByUserException;
 import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.repository.TaskRepository;
 import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +26,13 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     public void create(CreateTaskRequest request) {
+        User creator = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Task task = new Task();
         task.setName(request.name());
         task.setDescription(request.description());
         task.setDeadline(request.deadline());
+        task.setCreator(creator);
 
         task.setStatus(request.status());
 
@@ -51,6 +56,8 @@ public class TaskService {
                 task.getParticipants().add(user);
             }
         }
+
+        taskRepository.save(task);
     }
 
 

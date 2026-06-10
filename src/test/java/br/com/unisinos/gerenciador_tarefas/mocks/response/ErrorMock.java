@@ -44,4 +44,39 @@ public class ErrorMock {
                 "o campo x é inválido"
         );
     }
+
+    public static ErrorMessageResponse userNotFoundById() {
+        return new ErrorMessageResponse(
+                404,
+                ErrorMessages.USER_NOT_FOUND_BY_ID
+        );
+    }
+
+    public static ErrorMessageResponse noRegisteredUsers() {
+        return new ErrorMessageResponse(
+                404,
+                ErrorMessages.NO_REGISTERED_USER
+        );
+    }
+
+    public static ErrorMessageResponse duplicateEmail() {
+        return new ErrorMessageResponse(
+                400,
+                ErrorMessages.REUSED_EMAIL
+        );
+    }
+
+    public static ErrorMessageResponse duplicatePhone() {
+        return new ErrorMessageResponse(
+                400,
+                ErrorMessages.REUSED_PHONE
+        );
+    }
+
+    public static ErrorMessageResponse forbidden() {
+        return new ErrorMessageResponse(
+                403,
+                ErrorMessages.NOT_ALLOWED_USER
+        );
+    }
 }

@@ -2,6 +2,7 @@ package br.com.unisinos.gerenciador_tarefas.service;
 
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.UpdateUserRequest;
+import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.user.UserDetailResponse;
 import br.com.unisinos.gerenciador_tarefas.entities.User;
 import br.com.unisinos.gerenciador_tarefas.exception.BadRequestException;
@@ -9,20 +10,27 @@ import br.com.unisinos.gerenciador_tarefas.exception.TaskNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.exception.UserNotFoundException;
 import br.com.unisinos.gerenciador_tarefas.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
     public void create(CreateUserRequest request) {
-        if (userRepository.findByEmail(request.email()) != null) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
             throw new BadRequestException("Email já cadastrado");
         }
-        if (userRepository.findByPhone(request.phone()) != null) {
+
+        if (request.phone() != null && userRepository.findByPhone(request.phone()).isPresent()) {
             throw new BadRequestException("Telefone já cadastrado");
         }
 
@@ -31,7 +39,7 @@ public class UserService {
         user.setEmail(request.email());
         user.setBirthDate(request.birthDate());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setPhone(request.phone()); // TODO criptografar senha
+        user.setPhone(request.phone());
         user.setRole(request.role());
         user.setActive(true);
   
@@ -40,26 +48,31 @@ public class UserService {
 
     public UserDetailResponse findById(Long id){
         User user = userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(() ->
-                        new TaskNotFoundException()
+                .orElseThrow(UserNotFoundException::new
                 );
         return new UserDetailResponse(user);
 
     }
 
     public UserDetailResponse update(Long id, UpdateUserRequest request){
-        User u = userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(()->
-                        new UserNotFoundException()
-                );
+        User u;
+        if(id != null){
+            u = userRepository.findByIdAndIsActiveTrue(id)
+                    .orElseThrow(UserNotFoundException::new
+                    );
+        }
+        else{
+            u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        }
+
         if(request.phone() != null && !request.phone().isBlank()){
-            if (userRepository.findByPhone(request.phone()) != null) {
+            if (userRepository.findByPhoneAndIdNot(request.phone(), id).isPresent()) {
                 throw new BadRequestException("Telefone já cadastrado");
             }
-            u.setEmail(request.email());
+            u.setPhone(request.phone());
         }
         if(request.email() != null && !request.email().isBlank()){
-            if (userRepository.findByEmail(request.email()) != null) {
+            if (userRepository.findByEmailAndIdNot(request.email(), id).isPresent()) {
                 throw new BadRequestException("Email já cadastrado");
             }
             u.setEmail(request.email());
@@ -84,9 +97,30 @@ public class UserService {
 
     public void delete(Long id){
         User u = userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(()->
-                        new UserNotFoundException()
+                .orElseThrow(UserNotFoundException::new
                     );
+
+        u.setActive(false);
+
+        userRepository.save(u);
+    }
+
+    public List<ListUserResponse> listActiveUsers(){
+        List<User> list = userRepository.findByIsActiveTrue();
+
+        return list.stream()
+                .map(ListUserResponse::new)
+                .toList();
+    }
+
+    public UserDetailResponse detailLoggedUser(){
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return new UserDetailResponse(u);
+    }
+
+    public void deleteLoggedUser(){
+        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         u.setActive(false);
 

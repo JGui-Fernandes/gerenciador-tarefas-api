@@ -7,7 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class JwtUtilImpl implements JwtUtil {
         byte[] secretBytes = secret.getBytes(StandardCharsets.UTF_8);
         byte[] keyBytes = secretBytes.length < 32
                 ? Arrays.copyOf(secretBytes, 32)
-                : Arrays.copyOf(secretBytes, 32);
+                : secretBytes;
         signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
