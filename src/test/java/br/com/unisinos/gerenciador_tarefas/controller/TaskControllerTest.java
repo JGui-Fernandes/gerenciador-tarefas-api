@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -49,12 +50,10 @@ class TaskControllerTest {
     @MockitoBean
     private TaskService service;
 
-    @Autowired
-    private LoginTestService login;
-
     // Cenário: Criar tarefa com todos os campos preenchidos com usuário logado.
     // Esperado: 201 Created (sem body na resposta).
     @Test
+    @WithMockUser(roles = "USER")
     void shouldCreateTaskWithAllAttributesSuccessfully() throws Exception {
 
         CreateTaskRequest request =
@@ -62,7 +61,6 @@ class TaskControllerTest {
 
 
         mockMvc.perform(post(Endpoints.TASKS)
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
                 .andExpect(status().isCreated())
@@ -72,6 +70,7 @@ class TaskControllerTest {
     // Cenário: Criar tarefa apenas com campos obrigatórios com usuário logado.
     // Esperado: 201 Created (sem body na resposta).
     @Test
+    @WithMockUser(roles = "USER")
     void shouldCreateTaskWithMandatoryAttributesSuccessfully() throws Exception {
 
         CreateTaskRequest request =
@@ -79,7 +78,6 @@ class TaskControllerTest {
 
 
         mockMvc.perform(post(Endpoints.TASKS)
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtils.toJson(request)))
                 .andExpect(status().isCreated())
@@ -90,9 +88,9 @@ class TaskControllerTest {
     // Cenário: Tentar criar tarefa sem nenhum campo preenchido.
     // Esperado: 400 Bad Request.
     @Test
+    @WithMockUser(roles = "USER")
     void shouldNotCreateTaskWithNoAttributesError() throws Exception {
         mockMvc.perform(post(Endpoints.TASKS)
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest());
@@ -101,6 +99,7 @@ class TaskControllerTest {
     // Cenário: Buscar tarefa por ID existente com usuário logado.
     // Esperado: 200 OK + TaskDetailResponse.
     @Test
+    @WithMockUser(roles = "USER")
     void shouldReturnTaskByIdSuccessfully() throws Exception {
 
         when(service.findById(1L))
@@ -108,8 +107,7 @@ class TaskControllerTest {
                         TaskMock.taskDetailResponse()
                 );
 
-        mockMvc.perform(get(Endpoints.TASKS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+        mockMvc.perform(get(Endpoints.TASKS + "/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).isNotEmpty())
@@ -122,6 +120,7 @@ class TaskControllerTest {
     // Cenário: Buscar tarefas atribuídas a um usuário existente.
     // Esperado: 200 OK + lista de ListTaskResponse.
     @Test
+    @WithMockUser(roles = "USER")
     void shouldReturnTaskByUserSuccessfully() throws Exception {
 
         List<ListTaskResponse> list =
@@ -134,9 +133,7 @@ class TaskControllerTest {
 
         mockMvc.perform(
                         get(Endpoints.TASKS)
-                                .param("assignedTo", "1")
-                                .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful())
-                )
+                                .param("assignedTo", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").isNumber())
@@ -148,6 +145,7 @@ class TaskControllerTest {
     // Cenário: Buscar tarefa por ID que não existe.
     // Esperado: 404 Not Found.
     @Test
+    @WithMockUser(roles = "USER")
     void shouldReturnTaskNotFoundByIdError() throws Exception {
 
         ErrorMessageResponse error =
@@ -158,8 +156,7 @@ class TaskControllerTest {
                         new TaskNotFoundException()
                 );
 
-        mockMvc.perform(get(Endpoints.TASKS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+        mockMvc.perform(get(Endpoints.TASKS + "/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE)
                         .value(error.statusCode()))
@@ -170,6 +167,7 @@ class TaskControllerTest {
     // Cenário: Buscar tarefas de um usuário que não existe.
     // Esperado: 404 Not Found.
     @Test
+    @WithMockUser(roles = "USER")
     void shouldReturnTaskNotFoundByUserError() throws Exception {
 
         ErrorMessageResponse error =
@@ -182,8 +180,7 @@ class TaskControllerTest {
 
         mockMvc.perform(
                 get(Endpoints.TASKS)
-                        .param("assignedTo", "1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+                        .param("assignedTo", "1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE)
                         .value(error.statusCode()))
@@ -194,6 +191,7 @@ class TaskControllerTest {
     // Cenário: Atualizar todos os campos de uma tarefa existente com usuário logado.
     // Esperado: 200 OK + TaskDetailResponse com os dados atualizados.
     @Test
+    @WithMockUser(roles = "USER")
     void shouldUpdateAllAttributesSuccessfully() throws Exception {
         UpdateTaskRequest request =
                 TaskBody.updateTaskFullBody();
@@ -208,8 +206,7 @@ class TaskControllerTest {
 
         mockMvc.perform(put(Endpoints.TASKS + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtils.toJson(request))
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+                        .content(JsonUtils.toJson(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).value(request.name()))
@@ -228,6 +225,7 @@ class TaskControllerTest {
     // Cenário: Atualizar apenas o nome de uma tarefa existente com usuário logado.
     // Esperado: 200 OK + TaskDetailResponse com o nome atualizado.
     @Test
+    @WithMockUser(roles = "USER")
     void shouldUpdateNameSuccessfully() throws Exception {
         UpdateTaskRequest request =
                 TaskBody.updateName();
@@ -242,8 +240,7 @@ class TaskControllerTest {
 
         mockMvc.perform(put(Endpoints.TASKS + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtils.toJson(request))
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+                        .content(JsonUtils.toJson(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JsonPath.ID).isNumber())
                 .andExpect(jsonPath(JsonPath.NAME).isNotEmpty())
@@ -256,9 +253,9 @@ class TaskControllerTest {
     // Esperado: 204 No Content (sem body na resposta).
 
     @Test
+    @WithMockUser(roles = "USER")
     void shouldDeleteTaskByIdSuccessfully() throws Exception {
-        mockMvc.perform(delete(Endpoints.TASKS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+        mockMvc.perform(delete(Endpoints.TASKS + "/1"))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string(""));
     }
@@ -267,14 +264,14 @@ class TaskControllerTest {
     // Esperado: 404 Not Found.
 
     @Test
+    @WithMockUser(roles = "USER")
     void shouldReturnTaskNotFoundOnDeleteError() throws Exception {
         ErrorMessageResponse error = ErrorMock.taskNotFoundById();
 
         doThrow(new TaskNotFoundException())
                 .when(service).delete(1L);
 
-        mockMvc.perform(delete(Endpoints.TASKS + "/1")
-                        .header(HttpHeaders.AUTHORIZATION, login.loginSuccessful()))
+        mockMvc.perform(delete(Endpoints.TASKS + "/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(JsonPath.ERROR_STATUS_CODE).value(error.statusCode()))
                 .andExpect(jsonPath(JsonPath.ERROR_MESSAGE).value(ErrorMessages.TASK_NOT_FOUND_BY_ID));
