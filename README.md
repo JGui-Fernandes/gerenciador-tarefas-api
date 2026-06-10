@@ -31,7 +31,7 @@ O projeto foi desenvolvido como trabalho acadêmico na Unisinos e serve como ref
 
 - Java 21+
 - Maven 3.9+
-- MySQL 8+
+- Docker 28+
 
 **Passos:**
 
@@ -41,11 +41,11 @@ git clone https://github.com/<seu-usuario>/gerenciador-tarefas-api.git
 cd gerenciador-tarefas-api
 
 # 2. Crie o banco de dados no MySQL
-CREATE DATABASE `gerenciador-tarefas`;
+docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=<sua-senha> -e MYSQL_DATABASE=gerenciador-tarefas -p 3306:3306 -d mysql:8.0
 
 # 3. Configure as credenciais em src/main/resources/application.properties
 spring.datasource.url=jdbc:mysql://localhost:3306/gerenciador-tarefas
-spring.datasource.username=<seu-usuario>
+spring.datasource.username=root
 spring.datasource.password=<sua-senha>
 jwt.secret=<chave-secreta-de-no-minimo-32-chars>
 
@@ -311,8 +311,6 @@ spring.jpa.properties.hibernate.format_sql=true
 # JWT
 jwt.secret=sua-chave-secreta-de-no-minimo-32-caracteres
 ```
-
-> ⚠️ **Atenção:** Nunca comite credenciais reais no repositório. Use variáveis de ambiente ou um arquivo `.env` ignorado pelo `.gitignore` em ambientes de produção.
 
 ### Dependências principais
 
