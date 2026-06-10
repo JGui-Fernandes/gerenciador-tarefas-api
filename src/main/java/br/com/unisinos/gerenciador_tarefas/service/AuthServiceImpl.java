@@ -1,5 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.service;
 
+import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
 import br.com.unisinos.gerenciador_tarefas.dto.request.auth.LoginRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.auth.LoginResponse;
@@ -36,10 +37,10 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(LoginRequest request) {
         User user = userRepository
                 .findByEmailAndIsActiveTrue(request.email())
-                .orElseThrow(() -> new InvalidCredentialsException("Email ou senha inválidos"));
+                .orElseThrow(() -> new InvalidCredentialsException(ErrorMessages.INVALID_LOGIN));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new InvalidCredentialsException("Email ou senha inválidos");
+            throw new InvalidCredentialsException(ErrorMessages.INVALID_LOGIN);
         }
 
         String token = jwtUtil.generateToken(user);

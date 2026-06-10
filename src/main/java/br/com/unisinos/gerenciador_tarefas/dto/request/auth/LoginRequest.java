@@ -1,13 +1,14 @@
 package br.com.unisinos.gerenciador_tarefas.dto.request.auth;
 
+import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 public record LoginRequest(
-        @Email (message = "Formato incorreto para o campo email")
-        @NotNull(message = "O campo email é obrigatório")
+        @Email (message = ErrorMessages.INVALID_EMAIL)
+        @NotNull(message = ErrorMessages.EMPTY_EMAIL)
         String email,
-        @NotNull(message = "O campo password é obrigatório")
+        @NotNull(message = ErrorMessages.EMPTY_PASSWORD)
         String password
 ) {
 }

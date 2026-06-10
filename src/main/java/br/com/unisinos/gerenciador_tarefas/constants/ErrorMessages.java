@@ -32,4 +32,9 @@ public final class ErrorMessages {
 
     public static final String INVALID_TOKEN = "Token inválido ou expirado";
 
+    public static final String EMPTY_EMAIL = "O campo email é obrigatório";
+    public static final String EMPTY_PASSWORD = "O campo password é obrigatório";
+    public static final String EMPTY_NAME = "O campo name é um campo obrigatório";
+
+    public static final String FORM_SENT = "Erro no envio do formulário";
 }

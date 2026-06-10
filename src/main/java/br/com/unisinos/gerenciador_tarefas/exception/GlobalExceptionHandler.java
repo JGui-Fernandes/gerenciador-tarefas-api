@@ -1,5 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.exception;
 
+import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ErrorMessageResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.FieldErrorResponse;
 import br.com.unisinos.gerenciador_tarefas.dto.response.error.ValidationErrorResponse;
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
         ValidationErrorResponse response =
                 new ValidationErrorResponse(
                         HttpStatus.BAD_REQUEST.value(),
-                        "Erro no envio do formulário",
+                        ErrorMessages.FORM_SENT,
                         errors
                 );
 

@@ -1,5 +1,6 @@
 package br.com.unisinos.gerenciador_tarefas.service;
 
+import br.com.unisinos.gerenciador_tarefas.constants.ErrorMessages;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.CreateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.request.user.UpdateUserRequest;
 import br.com.unisinos.gerenciador_tarefas.dto.response.user.ListUserResponse;
@@ -27,11 +28,11 @@ public class UserService {
 
     public void create(CreateUserRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
-            throw new BadRequestException("Email já cadastrado");
+            throw new BadRequestException(ErrorMessages.REUSED_EMAIL);
         }
 
         if (request.phone() != null && userRepository.findByPhone(request.phone()).isPresent()) {
-            throw new BadRequestException("Telefone já cadastrado");
+            throw new BadRequestException(ErrorMessages.REUSED_PHONE);
         }
 
         User user = new User();
@@ -67,13 +68,13 @@ public class UserService {
 
         if(request.phone() != null && !request.phone().isBlank()){
             if (userRepository.findByPhoneAndIdNot(request.phone(), id).isPresent()) {
-                throw new BadRequestException("Telefone já cadastrado");
+                throw new BadRequestException(ErrorMessages.REUSED_PHONE);
             }
             u.setPhone(request.phone());
         }
         if(request.email() != null && !request.email().isBlank()){
             if (userRepository.findByEmailAndIdNot(request.email(), id).isPresent()) {
-                throw new BadRequestException("Email já cadastrado");
+                throw new BadRequestException(ErrorMessages.REUSED_EMAIL);
             }
             u.setEmail(request.email());
         }
