@@ -12,6 +12,7 @@ API RESTful para gerenciamento de tarefas com autenticação JWT, controle de ac
 - [Fluxo de Requisições](#fluxo-de-requisições)
 - [Configuração e Deploy](#configuração-e-deploy)
 - [Testes Automatizados](#testes-automatizados)
+- [Demonstração](#demonstração)
 
 ---
 
@@ -423,3 +424,9 @@ Os nomes de método seguem o padrão `should<Ação><Contexto>[Error]`, tornando
 ```
 
 Os testes requerem que a aplicação consiga inicializar o contexto Spring. As dependências de banco de dados são desacopladas via `@MockitoBean` nos testes de controller, então **não é necessário um banco de dados ativo** para executar a suíte de testes.
+
+---
+
+## Demonstração
+
+[▶️ Clique aqui para assistir à demonstração]([https://youtu.be/seu_video](https://drive.google.com/file/d/19Ng1OaAtQQbLBu9IkBzp9xMsfURJEY5n/view?usp=sharing))
